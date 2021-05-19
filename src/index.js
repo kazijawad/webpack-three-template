@@ -1,9 +1,9 @@
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import "./index.css";
-import vertexShader from "./shaders/vertex.glsl";
-import fragmentShader from "./shaders/fragment.glsl";
+import './index.css';
+import vertexShader from './shaders/vertex.glsl';
+import fragmentShader from './shaders/fragment.glsl';
 
 const dimensions = {
     width: window.innerWidth,
@@ -11,11 +11,11 @@ const dimensions = {
 };
 
 // Renderer
-const canvas = document.querySelector("#stage");
+const canvas = document.querySelector('#stage');
 const renderer = new THREE.WebGLRenderer({ canvas });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(dimensions.width, dimensions.height);
-renderer.setClearColor("#161616", 1);
+renderer.setClearColor('#161616', 1);
 
 // Scene
 const scene = new THREE.Scene();
@@ -37,7 +37,7 @@ const material = new THREE.ShaderMaterial({
     fragmentShader,
     uniforms: {
         color: {
-            value: new THREE.Color("#fff"),
+            value: new THREE.Color('#fff'),
         },
         time: {
             value: 0,
@@ -48,7 +48,7 @@ const material = new THREE.ShaderMaterial({
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
-window.addEventListener("resize", () => {
+window.addEventListener('resize', () => {
     // Update Dimensions
     dimensions.width = window.innerWidth;
     dimensions.height = window.innerHeight;
