@@ -1,12 +1,12 @@
 *, *::before, *::after {
+    box-sizing: inherit;
     margin: 0;
     padding: 0;
-    box-sizing: inherit;
     font-weight: 400;
 }
 
 html {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Helvetica, sans-serif;
     font-size: 62.5%;
     scroll-behavior: smooth;
 }
@@ -15,7 +15,7 @@ body {
     box-sizing: border-box;
     height: 100%;
     width: 100%;
-    background-color: #fff;
+    background-color: #FFF;
     color: #000;
 }
 

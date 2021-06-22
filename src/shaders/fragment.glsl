@@ -1,8 +1,8 @@
 varying vec2 vUv;
 
-uniform vec3 color;
-uniform float time;
+uniform float uTime;
+uniform vec3 uColor;
 
 void main() {
-    gl_FragColor = vec4(vec3(vUv.x + sin(time), vUv.x, vUv.y + cos(time)) * color, 1.0);
+    gl_FragColor = vec4(vec3(vUv.x + sin(uTime), vUv.x, vUv.y + cos(uTime)) * uColor, 1.0);
 }
