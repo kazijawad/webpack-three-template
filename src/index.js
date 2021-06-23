@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import TWEEN from '@tweenjs/tween.js';
 
 import './index.css';
 import vertexShader from './shaders/vertex.glsl';
@@ -63,8 +64,20 @@ function handleResize() {
 
 window.addEventListener('resize', handleResize);
 
+// Interaction Handler
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+function handleMouseMove(event) {
+    mouse.x = event.clientX / sizes.width * 2 - 1;
+    mouse.y = -(event.clientY / sizes.height) * 2 + 1;
+}
+
+window.addEventListener('mousemove', handleMouseMove);
+
 // Animation Handler
 const clock = new THREE.Clock();
+let currentIntersect = null;
 
 function render() {
     const elapsedTime = clock.getElapsedTime();
@@ -73,6 +86,31 @@ function render() {
     cube.rotation.x = elapsedTime;
     cube.rotation.y = elapsedTime;
     material.uniforms.uTime.value = elapsedTime;
+
+    // Update Raycaster
+    raycaster.setFromCamera(mouse, camera);
+
+    const intersects = raycaster.intersectObject(cube);
+    if (intersects.length) {
+        if (!currentIntersect) {
+            const tween = new TWEEN.Tween(intersects[0].object.scale)
+            tween.to({ x: 1.2, y: 1.2, z: 1.2 }, 300);
+            tween.easing(TWEEN.Easing.Back.InOut);
+            tween.start();
+        }
+        currentIntersect = intersects[0];
+    } else {
+        if (currentIntersect) {
+            const tween = new TWEEN.Tween(currentIntersect.object.scale)
+            tween.to({ x: 1, y: 1, z: 1 }, 300);
+            tween.easing(TWEEN.Easing.Back.InOut);
+            tween.start();
+        }
+        currentIntersect = null;
+    }
+
+    // Update Tween
+    TWEEN.update()
 
     // Update Controls
     controls.update();
