@@ -7,7 +7,9 @@ class App {
     }
 
     createStage() {
-        this.stage = new Stage();
+        const searchParams = new URLSearchParams(window.location.search);
+        const debug = searchParams.get('debug');
+        this.stage = new Stage({ debug: Boolean(debug) });
     }
 }
 

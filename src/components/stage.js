@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import TWEEN from '@tweenjs/tween.js';
 
 import Cube from './cube';
 
@@ -14,9 +13,6 @@ class Stage {
         this.canvas = document.querySelector('#stage');
 
         this.clock = new THREE.Clock();
-        this.raycaster = new THREE.Raycaster();
-        this.mouse = new THREE.Vector2();
-        this.currentIntersect = null;
         this.objects = [];
 
         this.createScene();
@@ -52,12 +48,14 @@ class Stage {
     }
 
     createObjects() {
-        this.cube = new Cube({
+        const cube = new Cube({
+            sizes: this.sizes,
+            camera: this.camera,
             scene: this.scene,
-            dimensions: [1, 1, 1]
+            args: [1, 1, 1]
         });
 
-        this.objects.push(this.cube);
+        this.objects.push(cube);
     }
 
     createControls() {
@@ -79,50 +77,19 @@ class Stage {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     }
 
-    handleMouseMove(event) {
-        this.mouse.x = event.clientX / this.sizes.width * 2 - 1;
-        this.mouse.y = -(event.clientY / this.sizes.height) * 2 + 1;
-    }
-
     addEventListeners() {
         window.addEventListener('resize', this.handleResize.bind(this));
-        window.addEventListener('mousemove', this.handleMouseMove.bind(this));
     }
 
     render() {
         const elapsedTime = this.clock.getElapsedTime();
 
-        // Update Test Cube
+        // Update Objects
         this.objects.forEach((object) => {
             if (object.render) {
                 object.render(elapsedTime);
             }
-        })
-
-        // Update Raycaster
-        this.raycaster.setFromCamera(this.mouse, this.camera);
-
-        const intersects = this.raycaster.intersectObject(this.cube.mesh);
-        if (intersects.length) {
-            if (!this.currentIntersect) {
-                const tween = new TWEEN.Tween(intersects[0].object.scale)
-                tween.to({ x: 1.2, y: 1.2, z: 1.2 }, 300);
-                tween.easing(TWEEN.Easing.Back.InOut);
-                tween.start();
-            }
-            this.currentIntersect = intersects[0];
-        } else {
-            if (this.currentIntersect) {
-                const tween = new TWEEN.Tween(this.currentIntersect.object.scale)
-                tween.to({ x: 1, y: 1, z: 1 }, 300);
-                tween.easing(TWEEN.Easing.Back.InOut);
-                tween.start();
-            }
-            this.currentIntersect = null;
-        }
-
-        // Update Tween
-        TWEEN.update();
+        });
 
         // Update Controls
         if (this.debug) {
